@@ -26,37 +26,50 @@ import com.example.webie_java.R;
 import com.example.webie_java.ui.login.LoginViewModel;
 import com.example.webie_java.ui.login.LoginViewModelFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity
+    {
 
-    private LoginViewModel loginViewModel;
+        private LoginViewModel loginViewModel; // declare object
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        @Override // override a method
+        public void onCreate(Bundle savedInstanceState) //method call
+            {
+                /*Since we override the method, by this line we run our code in addition to the
+                existing code. If you leave out this line, then only your code is running. The existing
+                code is ignored completely. You need to implement the super call in onCreate() otherwise
+                the Activity never run.*/
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_login); //get xml screen from layout file
+                loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+                        .get(LoginViewModel.class); // instancing
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+                //Initialize object which you can see on the screen
+                final EditText usernameEditText = findViewById(R.id.username);
+                final EditText passwordEditText = findViewById(R.id.password);
+                final Button loginButton = findViewById(R.id.login);
+                final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
+        //Call function from the loginViewModel class
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>()
+            {
+                @Override //override the method
+                public void onChanged(@Nullable LoginFormState loginFormState)
+                    {
+                        if (loginFormState == null)
+                            {
+                                return;
+                            }
+                        loginButton.setEnabled(loginFormState.isDataValid());
+                        if (loginFormState.getUsernameError() != null)
+                            {
+                                usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                            }
+                        if (loginFormState.getPasswordError() != null)
+                            {
+                                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                            }
+                    }
+            });
 
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
@@ -119,13 +132,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
+        private void updateUiWithUser(LoggedInUserView model) {
+            String welcome = getString(R.string.welcome) + model.getDisplayName();
+            // TODO : initiate successful logged in experience
+            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        private void showLoginFailed(@StringRes Integer errorString) {
+            Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        }
     }
-}
